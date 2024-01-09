@@ -24,7 +24,7 @@
     state: present
 
 - name: Get installed version.
-  ansible.builtin.command: git --version
+  ansible.builtin.command: git --version # noqa command-instead-of-module
   changed_when: false
   failed_when: false
   check_mode: false
@@ -41,6 +41,7 @@
   ansible.builtin.get_url:
     url: "https://www.kernel.org/pub/software/scm/git/git-{{ git_version }}.tar.gz"
     dest: "{{ workspace }}/git-{{ git_version }}.tar.gz"
+    mode: '0644'
   when: (git_installed_version.rc != 0) or (git_reinstall_from_source | bool)
 
 - name: Expand git archive.
@@ -61,3 +62,5 @@
     - install
   when: (git_installed_version.rc != 0) or (git_reinstall_from_source | bool)
   become: true
+  register: git_build_result
+  changed_when: "'Nothing to be done for' not in git_build_result.stdout_lines"
