@@ -48,7 +48,7 @@
     src: "{{ workspace }}/git-{{ git_version }}.tar.gz"
     dest: "{{ workspace }}"
     creates: "{{ workspace }}/git-{{ git_version }}/README"
-    remote_src: false
+    remote_src: true
     mode: '0755'
   when: (git_installed_version.rc != 0) or (git_reinstall_from_source | bool)
 
